@@ -14,7 +14,8 @@ void i2c_disable () {
 }
 
 static void i2c_wait () {
-	while (!(TWCR & _BV(TWINT)));
+	uint32_t t = 0;
+	while (!(TWCR & _BV(TWINT)) && t++ < 100000);
 }
 
 bool i2c_start () {
