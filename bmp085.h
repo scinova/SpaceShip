@@ -58,8 +58,8 @@ typedef struct {
 
 void bmp085_init ();
 void bmp085_set_mode(bmp085_mode_t mode);
-float bmp085_readTemperature();
-float bmp085_readPressure();
+float bmp085_read_temperature();
+float bmp085_read_pressure();
 
 //float pressureToAltitude(float seaLevel, float atmospheric);
 //float seaLevelForAltitude(float altitude, float atmospheric);
