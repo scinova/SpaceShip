@@ -1,0 +1,73 @@
+
+// HOME LIGHT
+#define KNOB1_SWITCH	!(PINF & _BV(PF0))
+#define KNOB1_CLK		!(PINF & _BV(PF1))
+#define KNOB1_DIR		!(PINF & _BV(PF2))
+
+#define KNOB2_CLK		!(PINF & _BV(PF3))
+#define KNOB2_DIR		!(PINF & _BV(PF4))
+#define KNOB2_SWITCH	!(PINF & _BV(PF5))
+
+#define LIGHT2_RED_PIN 0 //PWM
+#define LIGHT2_GREEN_PIN 0 //PWM
+#define LIGHT2_BLUE_PIN 0 //PWM
+
+#define LIGHT1_DATA_PIN 0
+
+// DRIVE CONTROL
+#define THROTTLE_PIN 0 //ANALOG
+#define HORN_SWITCH_PIN 0
+
+#define VISIBILITY_LIGHT_SWITCH	!(PINK & _BV(PK0))
+#define LOWBEAM_LIGHT_SWITCH	!(PINK & _BV(PK1))
+#define HIGHBEAM_LIGHT_SWITCH	!(PINK & _BV(PK2))
+#define TURN_LEFT_SWITCH		!(PINK & _BV(PK3))
+#define TURN_RIGHT_SWITCH		!(PINK & _BV(PK4))
+#define HAZARD_SWITCH			!(PINK & _BV(PK5))
+#define REVERSE_SWITCH			!(PINK & _BV(PK6))
+#define BRAKE_SWITCH			!(PINK & _BV(PK7))
+
+//--
+#define HORN_PIN 0
+#define VISIBILITY_LIGHT_PIN 0
+#define LOWBEAM_LIGHT_PIN 0 //PWM
+#define HIGHBEAM_LIGHT_PIN 0 //PWM
+#define FRONT_LEDS_DATA_PIN (PORTJ
+#define REAR_LEDS_DATA_PIN 0
+#define BRAKE_LIGHT_PIN 0
+
+// BLDC MOTOR CONTROL
+#define MOTOR0_HAL_U 0
+#define MOTOR0_HAL_V 0
+#define MOTOR0_HAL_W 0
+#define MOTOR0_BEMF_U 0
+#define MOTOR0_BEMF_V 0
+#define MOTOR0_BEMF_W 0
+#define MOTOR0_SPEED 0
+//--
+#define MOTOR0_U 0 // PWM
+#define MOTOR0_V 0 // PWM
+#define MOTOR0_W 0 // PWM
+
+#define MOTOR1_HAL_U 0
+#define MOTOR1_HAL_V 0
+#define MOTOR1_HAL_W 0
+#define MOTOR1_BEMF_U 0
+#define MOTOR1_BEMF_V 0
+#define MOTOR1_BEMF_W 0
+#define MOTOR1_SPEED 0
+//--
+#define MOTOR1_U 0 // PWM
+#define MOTOR1_V 0 // PWM
+#define MOTOR1_W 0 // PWM
+//
+#define SONAR1_ECHO_PIN 0
+#define SONAR1_RET_PIN 0
+#define SONAR2_ECHO_PIN 0
+#define SONAR2_RET_PIN 0
+#define SONAR3_ECHO_PIN 0
+#define SONAR3_RET_PIN 0
+#define SONAR4_ECHO_PIN 0
+#define SONAR4_RET_PIN 0
+
+#define WHEEL_ANGLE_PIN 0
