@@ -8,7 +8,7 @@ OBJCOPY=avr-objcopy
 CFLAGS=-std=c99 -Wall -Os -fdata-sections -ffunction-sections
 CXXFLAGS=-std=c++11 -Wall -Os -fdata-sections -ffunction-sections
 CPPFLAGS=-DF_CPU=16000000 -mmcu=$(DEVICE)
-LDFLAGS=-lc -Wl,-undefined=millism,-gc-sections
+LDFLAGS=-lc -Wl,-gc-sections
 
 CFILES = $(wildcard *.c)
 COBJS := $(patsubst %.c,$(BUILDDIR)/%.o,$(CFILES))

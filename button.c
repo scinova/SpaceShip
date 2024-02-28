@@ -1,11 +1,11 @@
+#include "system.h"
 #include "button.h"
-#include "millis.h"
 
 #define DEBOUNCE_DURATION 20
 #define HOLD_DURATION 1000
 
 uint8_t switch_debounce(Switch *sw, bool value) {
-	unsigned long now = millis();
+	unsigned long now = uptime_ms();
 	if (!sw->state && value && now - sw->_stamp > DEBOUNCE_DURATION) {
 		sw->state = true;
 		sw->_stamp = now;
@@ -20,7 +20,7 @@ uint8_t switch_debounce(Switch *sw, bool value) {
 }
 
 uint8_t button_debounce(Button *button, bool value) {
-	unsigned long now = millis();
+	unsigned long now = uptime_ms();
 	if (!button->state && value && now - button->_stamp > DEBOUNCE_DURATION) {
 		button->state = true;
 		button->_stamp = now;
@@ -43,7 +43,7 @@ uint8_t button_debounce(Button *button, bool value) {
 }
 
 uint8_t encoder_debounce(Encoder *enc, bool clk, bool dir) {
-	unsigned long now = millis();
+	unsigned long now = uptime_ms();
 	if (!enc->state && clk) {
 		enc->state = true;
 		enc->_stamp = now;

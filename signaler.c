@@ -1,6 +1,6 @@
+#include "system.h"
 #include "signaler.h"
 #include "light.h"
-#include "millis.h"
 
 #define AMBER (GRB8) {.g = 0xc0, .r = 0xff, .b = 0}
 #define BLACK (GRB8) {.g = 0, .r = 0, .b = 0}
@@ -14,7 +14,7 @@ void signaler_init(ledstrip_t *frontledstrip_, ledstrip_t *rearledstrip_) {
 }
 
 void signaler_loop() {
-	uint16_t time2 = millis() % 2000;
+	uint16_t time2 = uptime_ms() % 2000;
 	uint16_t time = time2 % 1000;
 	bool strobe = time % 50 > 25;
 

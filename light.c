@@ -1,7 +1,7 @@
+#include "system.h"
+#include "light.h"
 #include <math.h>
 #include <stdint.h>
-#include "light.h"
-#include "millis.h"
 #include <stdlib.h> //malloc
 
 #define FADEIN_DURATION 1000
@@ -58,7 +58,7 @@ void lightToggle(BaseLight *light) {
 void lightFadeIn(BaseLight *light) {
 	if (light->mode == LIGHT_OFF || light->mode == LIGHT_FADING_OUT) {
 		light->mode = LIGHT_FADING_IN;
-		light->_fadeStart = millis();
+		light->_fadeStart = uptime_ms();
 		light->_fadeLevel = light->level;
 		//loop();
 	}
@@ -67,7 +67,7 @@ void lightFadeIn(BaseLight *light) {
 void lightFadeOut(BaseLight *light) {
 	if (light->mode == LIGHT_ON || light->mode == LIGHT_FADING_IN) {
 		light->mode = LIGHT_FADING_OUT;
-		light->_fadeStart = millis();
+		light->_fadeStart = uptime_ms();
 		light->_fadeLevel = light->level;
 	}
 }
@@ -82,14 +82,14 @@ void lightFadeToggle(BaseLight *light) {
 void lightLoop(BaseLight *light) {
 	switch (light->mode) {
 		case LIGHT_FADING_IN:
-			light->level = light->_fadeLevel + (1. - light->_fadeLevel) * (millis() - light->_fadeStart) / (double)FADEIN_DURATION;
+			light->level = light->_fadeLevel + (1. - light->_fadeLevel) * (uptime_ms() - light->_fadeStart) / (double)FADEIN_DURATION;
 			if (light->level >= 1) {
 				light->level = 1;
 				light->mode = LIGHT_ON;
 			}
 			break;
 		case LIGHT_FADING_OUT:
-			light->level = light->_fadeLevel - light->_fadeLevel * (double)(millis() - light->_fadeStart) / (double)FADEOUT_DURATION;
+			light->level = light->_fadeLevel - light->_fadeLevel * (double)(uptime_ms() - light->_fadeStart) / (double)FADEOUT_DURATION;
 			if (light->level <= 0) {
 				light->level = 0;
 				light->mode = LIGHT_OFF;

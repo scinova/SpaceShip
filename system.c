@@ -1,23 +1,20 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include <avr/power.h>
-#include <util/atomic.h>
 #include <stdbool.h>
+#include "system.h"
 
-#include "pinout.h"
-
-static volatile unsigned long tick = 0;
+static volatile unsigned long _systick = 0;
 
 ISR(TIMER0_OVF_vect) {
-	tick++;
+	_systick++;
 }
 
-unsigned long __attribute__ ((used)) millis() {
-	unsigned long tmp;
-	ATOMIC_BLOCK(ATOMIC_FORCEON) {
-		tmp = tick;
-	}
-	return tmp;
+uint64_t uptime_us() {
+	return _systick * 1000;
+}
+
+uint32_t uptime_ms() {
+	return _systick;
 }
 
 void system_init() {

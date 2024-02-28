@@ -1,14 +1,13 @@
+#include "system.h"
 #include "button.h"
 #include "light.h"
 #include "lightcontrol.h"
 #include "ws2812b.h"
 #include "signaler.h"
 #include "sensors.h"
-#include "millis.h"
-#include <avr/io.h>
-#include <util/delay.h>
-
 #include "pinout.h"
+#include <avr/io.h>
+//#include <util/delay.h>
 
 extern void system_init();
 extern void system_write_rgb_pwm (uint8_t red, uint8_t green, uint8_t blue);
@@ -62,7 +61,7 @@ typedef struct {
 Switches sw;
 
 void setup() {
-	sensors_init();
+	//sensors_init();
 
 	lightcontrol_init(&cabinlight, &roomlight);
 	signaler_init(&frontLedStrip, &rearLedStrip);
@@ -109,8 +108,8 @@ void loop() {
 	//OCR0A = 255 * roomlight.level;
 	ws2812b_writegrb((uint8_t *)frontLedStrip.pixels, 3 * 30);
 
-	OCR0A = millis() % 1000 > 500 ? 0 : 255;
-	_delay_ms(1);
+	OCR0A = uptime_ms() % 1000 > 500 ? 0 : 255;
+	delay_ms(1);
 }
 
 int main() {
