@@ -68,8 +68,8 @@ void loop() {
 	switch_debounce(&lowbeam_light_switch, PORTK&16);
 	switch_debounce(&highbeam_light_switch, PORTF&32);
 	switch_debounce(&horn_switch, PORTF&64);
-	switch_debounce(&brake_switch, PORTF&32);
-	switch_debounce(&reverse_switch, PORTF&128);
+	switch_debounce(&brake_switch, PORTF&128);
+	switch_debounce(&reverse_switch, PORTK&128);
 
 	signaler_loop();
 
