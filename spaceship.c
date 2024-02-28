@@ -34,25 +34,6 @@ LedStrip stamStrip;
 
 signal_control_t signaler;
 
-typedef struct {
-	bool knob1_switch;
-	bool knob1_clk;
-	bool knob1_dir;
-	bool knob2_switch;
-	bool knob2_clk;
-	bool knob2_dir;
-	bool sig_left;
-	bool sig_right;
-	bool sig_hazard;
-	bool sig_visibility;
-	bool sig_lowbeam;
-	bool sig_highbeam;
-	bool brake;
-	bool reverse;
-} Switches;
-
-Switches sw;
-
 void setup() {
 	//sensors_init();
 
@@ -70,13 +51,13 @@ void loop() {
 
 	// process
 	uint8_t event;
-	if ((event = button_debounce(&button1, sw.knob1_switch)))
+	if ((event = button_debounce(&button1, PORTK&1)))
 		cabinlight_control_handle(event);
-	if ((event = encoder_debounce(&encoder1, sw.knob1_clk, sw.knob1_dir)))
+	if ((event = encoder_debounce(&encoder1, PORTK&2, PORTK&4)))
 		cabinlight_control_handle(event);
-	if ((event = button_debounce(&button2, sw.knob2_switch)))
+	if ((event = button_debounce(&button2, PORTK&8)))
 		roomlight_control_handle(event);
-	if ((event = encoder_debounce(&encoder2, sw.knob2_clk, sw.knob2_dir)))
+	if ((event = encoder_debounce(&encoder2, PORTK&16, PORTK&32)))
 		roomlight_control_handle(event);
 
 /*	signaler.status.hazard = HAZARD_SWITCH;
