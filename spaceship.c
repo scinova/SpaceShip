@@ -74,7 +74,7 @@ void setup() {
 
 void loop() {
 	// read knobs
-	sensors_read();
+	//sensors_read();
 
 	// process
 	uint8_t event;
