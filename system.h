@@ -25,4 +25,9 @@ static inline void delay_ms(unsigned long ms) {
 	delay_us(ms * 1000);
 }
 
+inline void write_pwm0(uint8_t value) { OCR0A = value; }
+inline void write_pwm1(uint8_t value) { OCR0B = value; }
+inline void write_pwm2(uint8_t value) { OCR2A = value; }
+inline void write_pwm3(uint8_t value) { OCR2B = value; }
+
 #endif
