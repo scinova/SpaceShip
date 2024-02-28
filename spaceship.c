@@ -49,7 +49,7 @@ void loop() {
 	// read knobs
 	//sensors_read();
 
-	// process
+	// read knobs
 	uint8_t event;
 	if ((event = button_debounce(&button1, PORTK&1)))
 		cabinlight_control_handle(event);
@@ -60,15 +60,18 @@ void loop() {
 	if ((event = encoder_debounce(&encoder2, PORTK&16, PORTK&32)))
 		roomlight_control_handle(event);
 
-/*	signaler.status.hazard = HAZARD_SWITCH;
-	signaler.status.left = true;//TURN_LEFT_SWITCH & !HAZARD_SWITCH;
-	signaler.status.right = TURN_RIGHT_SWITCH & !TURN_LEFT_SWITCH & !HAZARD_SWITCH;
-	signaler.status.visibility = VISIBILITY_LIGHT_SWITCH;
-	signaler.status.lowbeam = LOWBEAM_LIGHT_SWITCH;
-	signaler.status.highbeam = HIGHBEAM_LIGHT_SWITCH;
-	signaler.status.brake = BRAKE_SWITCH;
-	signaler.status.reverse = REVERSE_SWITCH;
-*/
+	// read switches
+	switch_debounce(&left_turn_switch, PORTF&1);
+	switch_debounce(&right_turn_switch, PORTF&2);
+	switch_debounce(&hazard_switch, PORTF&4);
+	switch_debounce(&visibility_light_switch, PORTF&8);
+	switch_debounce(&highbeam_light_switch, PORTF&16);
+	switch_debounce(&brake_switch, PORTF&32);
+	switch_debounce(&horn_switch, PORTF&64);
+	switch_debounce(&reverse_switch, PORTF&128);
+	switch_debounce(&left_turn_switch, PORTK&128);
+
+
 	signaler_loop();
 
 	lightLoop((baselight_t *)&roomlight);
