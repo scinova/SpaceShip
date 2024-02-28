@@ -10,10 +10,6 @@
 uint64_t uptime_us();
 uint32_t uptime_ms();
 
-inline uint32_t millis() {
-	return uptime_ms();
-}
-
 static inline void spin(volatile uint32_t count) {
 	while (count--)
 		__asm__ ("nop");
