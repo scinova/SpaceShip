@@ -6,11 +6,6 @@
 #include "signaler.h"
 #include "sensors.h"
 #include "pinout.h"
-#include <avr/io.h>
-//#include <util/delay.h>
-
-extern void system_init();
-extern void system_write_rgb_pwm (uint8_t red, uint8_t green, uint8_t blue);
 
 Button button1;
 Button button2;
@@ -96,18 +91,21 @@ void loop() {
 	signaler_loop();
 
 	lightLoop((baselight_t *)&roomlight);
-//	lightLoop((baselight_t *)&cabinlight);
-	for (int i = 0; i < 12; i++)
-		stamStrip.pixels[i] = lightGRB8(&roomlight);
+	lightLoop((baselight_t *)&cabinlight);
 
 	// hardware output
 
-	//ws2812b_writegrb((uint8_t *)stamStrip.pixels, 3 * 12);
-	//OCR0A = 255 * roomlight.level;
-	ws2812b_writegrb((uint8_t *)frontLedStrip.pixels, 3 * 30);
+	RGB c = lightRGB(&roomlight);
+	write_pwm0(255 * c.r);
+	write_pwm2(255 * c.g);
+	write_pwm3(255 * c.b);
 
-	OCR0A = uptime_ms() % 1000 > 500 ? 0 : 255;
-	delay_ms(1);
+	for (int i = 0; i < 12; i++)
+		stamStrip.pixels[i] = lightGRB8(&roomlight);
+	//ws2812b_writegrb((uint8_t *)stamStrip.pixels, 3 * 12);
+	//ws2812b_writegrb((uint8_t *)frontLedStrip.pixels, 3 * 30);
+
+	write_pwm0(uptime_ms() % 1000 > 500 ? 0 : 255);
 }
 
 int main() {

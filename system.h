@@ -2,10 +2,12 @@
 #define system_h
 
 #include <stdint.h>
-#include <util/atomic.h>
+#include <avr/io.h>
 
 #define BIT(x) ((uint8_t) 1U << (x))
 #define REG(x) ((volatile uint8_t *) (x))
+
+void system_init();
 
 uint64_t uptime_us();
 uint32_t uptime_ms();
@@ -24,5 +26,10 @@ static inline void delay_us(unsigned long us) {
 static inline void delay_ms(unsigned long ms) {
 	delay_us(ms * 1000);
 }
+
+inline void write_pwm0(uint8_t value) { OCR0A = value; }
+inline void write_pwm1(uint8_t value) { OCR0B = value; }
+inline void write_pwm2(uint8_t value) { OCR2A = value; }
+inline void write_pwm3(uint8_t value) { OCR2B = value; }
 
 #endif
