@@ -29,13 +29,11 @@ Switch reverse_switch;
 
 whitelight_t cabinlight;
 colorlight_t roomlight;
+colorlight_t outsidelight;
 
 LedStrip frontLedStrip;
 LedStrip rearLedStrip;
 LedStrip stamStrip;
-
-whitelight_control_t cabinlight_control;
-colorlight_control_t roomlight_control;
 
 //sensors_t sensors;
 
@@ -63,7 +61,7 @@ Switches sw;
 void setup() {
 	//sensors_init();
 
-	lightcontrol_init(&cabinlight, &roomlight);
+	lightcontrol_init(&cabinlight, &roomlight, &outsidelight);
 	signaler_init(&frontLedStrip, &rearLedStrip);
 
 	LedStrip_init(&frontLedStrip, 30);
