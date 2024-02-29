@@ -30,7 +30,9 @@ LedStrip frontLedStrip;
 LedStrip rearLedStrip;
 LedStrip stamStrip;
 
-//sensors_t sensors;
+bool vehicle_enabled = false;
+bool recording_weather = false;
+bool recording_motion = false;
 
 void setup() {
 	//sensors_init();
@@ -44,10 +46,15 @@ void setup() {
 }
 
 void loop() {
-	// read knobs
-	//sensors_read();
+	// sensors
+	if (vehicle_enabled || recording_weather)
+		read_weather_sensors();
+	if (vehicle_enabled || recording_motion)
+		read_position_sensors();
+	if (vehicle_enabled)
+		read_gps_sensor();
 
-	// read knobs
+	// light knobs
 	uint8_t event;
 	if ((event = button_debounce(&button1, PORTK&1)))
 		cabinlight_control_handle(event);
@@ -57,29 +64,31 @@ void loop() {
 		roomlight_control_handle(event);
 	if ((event = encoder_debounce(&encoder2, PORTK&16, PORTK&32)))
 		roomlight_control_handle(event);
+	lightLoop((baselight_t *)&roomlight);
+	lightLoop((baselight_t *)&cabinlight);
 
-	// read switches
-	event = button_debounce(&left_turn_button, PORTF&1);
-	signal_left(event);
-	event = button_debounce(&right_turn_button, PORTF&2);
-	signal_right(event);
+	// signals
 	event = button_debounce(&hazard_button, PORTF&4);
 	signal_hazard(event);
 	switch_debounce(&visibility_light_switch, PORTF&8);
-	switch_debounce(&lowbeam_light_switch, PORTK&16);
-	switch_debounce(&highbeam_light_switch, PORTF&32);
-	switch_debounce(&horn_switch, PORTF&64);
-	switch_debounce(&brake_switch, PORTF&128);
-	switch_debounce(&reverse_switch, PORTK&128);
 	signal_visibility(visibility_light_switch.state);
-	signal_lowbeam(lowbeam_light_switch.state);
-	signal_highbeam(highbeam_light_switch.state);
-	signal_brake(brake_switch.state);
-	signal_reverse(reverse_switch.state);
+	if (vehicle_enabled) {
+		event = button_debounce(&left_turn_button, PORTF&1);
+		signal_left(event);
+		event = button_debounce(&right_turn_button, PORTF&2);
+		signal_right(event);
+		switch_debounce(&lowbeam_light_switch, PORTK&16);
+		switch_debounce(&highbeam_light_switch, PORTF&32);
+		switch_debounce(&brake_switch, PORTF&128);
+		switch_debounce(&reverse_switch, PORTK&128);
+		signal_lowbeam(lowbeam_light_switch.state);
+		signal_highbeam(highbeam_light_switch.state);
+		signal_brake(brake_switch.state);
+		signal_reverse(reverse_switch.state);
+	}
 	signaler_loop();
 
-	lightLoop((baselight_t *)&roomlight);
-	lightLoop((baselight_t *)&cabinlight);
+	switch_debounce(&horn_switch, PORTF&64);
 
 	// hardware output
 
