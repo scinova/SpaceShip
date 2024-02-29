@@ -90,17 +90,29 @@ void loop() {
 
 	switch_debounce(&horn_switch, PORTF&64);
 
-	// hardware output
+	// lights
+	if (cabinlight.level > 0)
+		write_pwm1(255 * cabinlight.level);
+	if (roomlight.level > 0) {
+		RGB c = lightRGB(&roomlight);
+		write_pwm0(255 * c.r);
+		write_pwm2(255 * c.g);
+		write_pwm3(255 * c.b);
+		//for (int i = 0; i < 12; i++)
+		//	stamStrip.pixels[i] = lightGRB8(&roomlight);
+		///ws2812b_writegrb((uint8_t *)stamStrip.pixels, 3 * 12);
+	}
+	if (outsidelight.level > 0) {
+		RGB c = lightRGB(&roomlight);
+		write_pwm0(255 * c.r);
+		write_pwm2(255 * c.g);
+		write_pwm3(255 * c.b);
+	}
 
-	RGB c = lightRGB(&roomlight);
-	write_pwm0(255 * c.r);
-	write_pwm2(255 * c.g);
-	write_pwm3(255 * c.b);
-
-	for (int i = 0; i < 12; i++)
-		stamStrip.pixels[i] = lightGRB8(&roomlight);
-	//ws2812b_writegrb((uint8_t *)stamStrip.pixels, 3 * 12);
-	//ws2812b_writegrb((uint8_t *)frontLedStrip.pixels, 3 * 30);
+	// vehicle lights
+	if (vehicle_enabled) {
+		ws2812b_writegrb((uint8_t *)frontLedStrip.pixels, 3 * 30);
+	}
 
 	write_pwm0(uptime_ms() % 1000 > 500 ? 0 : 255);
 }
