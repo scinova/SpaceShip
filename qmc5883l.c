@@ -38,6 +38,7 @@ void qmc5883l_init() {
 	i2c_write_register(QMC5883L_ADDRESS, QMC5883L_SET_RESET_PERIOD, 1);
 	i2c_write_register(QMC5883L_ADDRESS, QMC5883L_CONTROL_1,
 			QMC5883L_MODE_CONTINOUS | QMC5883L_RANGE_2G | QMC5883L_OSR_512 | QMC5883L_ODR_10HZ);
+}
 
 DoubleVector qmc5883l_read() {
 	uint8_t _buf[6];
@@ -52,15 +53,6 @@ DoubleVector qmc5883l_read() {
 
 int16_t qmc5883l_read_temperature() {
 	return i2c_read_register16(QMC5883L_ADDRESS, QMC5883L_TOUT_H);
-}
-
-/*	I2CDevice::begin((uint8_t)QMC5883L_ADDRESS);
-	i2c_write_register(QMC5883L_SET_RESET_PERIOD, 1);
-	setConfig(QMC5883L_MODE_CONTINOUS,
-			QMC5883L_OUTPUT_DATA_RATE_10HZ,
-			QMC5883L_RANGE_2G,
-			QMC5883L_OVER_SAMPLE_RATIO_512);
-	Serial.println("qmc begin end");*/
 }
 
 void qmc5883l_set_over_sample_ratio(qmc5883l_over_sample_ratio_t value) {
