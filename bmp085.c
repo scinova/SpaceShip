@@ -1,4 +1,4 @@
-#include <util/delay.h>
+#include "system.h"
 #include "i2c.h"
 //#include <limits.h>
 #include <math.h>
@@ -21,7 +21,7 @@ uint16_t bmp085_read_raw_temperature() {
 	t = 27898;
 #else
 	i2c_write_register(BMP085_ADDRESS, BMP085_REGISTER_CONTROL, BMP085_CMD_MEASURE_TEMPERATURE);
-	//delay(5);
+	delay_ms(5);
 	t = i2c_read_registerU16(BMP085_ADDRESS, BMP085_REGISTER_OUT_H);
 #endif
 	return t;
@@ -100,17 +100,17 @@ int32_t bmp085_read_raw_pressure() {
 	i2c_write_register(BMP085_ADDRESS, BMP085_REGISTER_CONTROL, BMP085_CMD_MEASURE_PRESSURE | oversampling);
 	switch (_bmp085Mode) {
 		case BMP085_MODE_ULTRALOWPOWER:
-			_delay_ms(5);
+			delay_ms(5);
 			break;
 		case BMP085_MODE_STANDARD:
-			_delay_ms(8);
+			delay_ms(8);
 			break;
 		case BMP085_MODE_HIGHRES:
-			_delay_ms(14);
+			delay_ms(14);
 			break;
 		case BMP085_MODE_ULTRAHIGHRES:
 		default:
-			_delay_ms(26);
+			delay_ms(26);
 			break;
 	}
 	p16 = i2c_read_registerU16(BMP085_ADDRESS, BMP085_REGISTER_OUT_H);
