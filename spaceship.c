@@ -5,6 +5,7 @@
 #include "ws2812b.h"
 #include "signaler.h"
 #include "sensors.h"
+#include "motor.h"
 #include "pinout.h"
 
 Button button1;
@@ -33,6 +34,7 @@ LedStrip stamStrip;
 bool vehicle_enabled = false;
 bool recording_weather = false;
 bool recording_motion = false;
+float throttle_level = 0;
 
 void setup() {
 	//sensors_init();
@@ -85,10 +87,13 @@ void loop() {
 		signal_highbeam(highbeam_light_switch.state);
 		signal_brake(brake_switch.state);
 		signal_reverse(reverse_switch.state);
+		switch_debounce(&horn_switch, PORTF&64);
 	}
 	signaler_loop();
 
-	switch_debounce(&horn_switch, PORTF&64);
+	// motor
+	if (vehicle_enabled && throttle_level > 0 && !brake_switch.state)
+		drive_motor(throttle_level, reverse_switch.state, PORTK & 1, PORTK & 2, PORTK & 4);
 
 	// lights
 	if (cabinlight.level > 0)
