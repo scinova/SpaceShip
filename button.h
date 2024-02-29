@@ -4,13 +4,13 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define SWITCH_CLOSE 1
-#define SWITCH_RELEASE 2
+#define SWITCH_CLOSED 1
+#define SWITCH_RELEASED 2
 
-#define BUTTON_PRESS 1
-#define BUTTON_RELEASE 2
+#define BUTTON_PRESSED 1
+#define BUTTON_RELEASED 2
 #define BUTTON_HOLD 3
-#define BUTTON_RELEASEHOLD 4
+#define BUTTON_RELEASEDHOLD 4
 
 #define ENCODER_LEFT 5
 #define ENCODER_RIGHT 6

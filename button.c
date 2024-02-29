@@ -9,12 +9,12 @@ uint8_t switch_debounce(Switch *sw, bool value) {
 	if (!sw->state && value && now - sw->_stamp > DEBOUNCE_DURATION) {
 		sw->state = true;
 		sw->_stamp = now;
-		return SWITCH_CLOSE;
+		return SWITCH_CLOSED;
 	}
 	if (sw->state && !value && now - sw->_stamp > DEBOUNCE_DURATION) {
 		sw->state = false;
 		sw->_stamp = now;
-		return SWITCH_RELEASE;
+		return SWITCH_RELEASED;
 	}
 	return 0;
 }
@@ -24,7 +24,7 @@ uint8_t button_debounce(Button *button, bool value) {
 	if (!button->state && value && now - button->_stamp > DEBOUNCE_DURATION) {
 		button->state = true;
 		button->_stamp = now;
-		return BUTTON_PRESS;
+		return BUTTON_PRESSED;
 	}
 	if (button->state && value && !button->_holding && now - button->_stamp > HOLD_DURATION) {
 		button->_holding = true;
@@ -35,9 +35,9 @@ uint8_t button_debounce(Button *button, bool value) {
 		button->_stamp = now;
 		if (button->_holding) {
 			button->_holding = false;
-			return BUTTON_RELEASEHOLD;
+			return BUTTON_RELEASEDHOLD;
 		}
-		return BUTTON_RELEASE;
+		return BUTTON_RELEASED;
 	}
 	return 0;
 }

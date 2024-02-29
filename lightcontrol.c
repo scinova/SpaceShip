@@ -32,7 +32,7 @@ void colorlight_control_handle(colorlight_control_t *c, uint8_t e) {
 		} else if (c->mode == HUE || c->mode == SATURATION) {
 			c->mode = LEVEL;
 		}
-	} else if (e == BUTTON_RELEASE) {
+	} else if (e == BUTTON_RELEASED) {
 		if (c->mode == HUE) {
 			c->mode = SATURATION;
 		} else if (c->mode == SATURATION) {
@@ -40,7 +40,7 @@ void colorlight_control_handle(colorlight_control_t *c, uint8_t e) {
 		} else if (c->mode == LEVEL) {
 			lightFadeToggle((BaseLight *)c->light);
 		}
-	} else if (e == BUTTON_RELEASEHOLD) {
+	} else if (e == BUTTON_RELEASEDHOLD) {
 	} else if (e == ENCODER_RIGHT) {
 		if (c->mode == LEVEL) {
 			lightIncreaseLevel((BaseLight *)c->light);
@@ -67,13 +67,13 @@ void whitelight_control_handle(whitelight_control_t *c, uint8_t e) {
 		} else if (c->mode == TEMPERATURE) {
 			c->mode = LEVEL;
 		}
-	} else if (e == BUTTON_RELEASE) {
+	} else if (e == BUTTON_RELEASED) {
 		if (c->mode == TEMPERATURE) {
 			c->mode = LEVEL;
 		} else if (c->mode == LEVEL) {
 			lightToggle((BaseLight *)c->light);
 		}
-	} else if (e == BUTTON_RELEASEHOLD) {
+	} else if (e == BUTTON_RELEASEDHOLD) {
 	} else if (e == ENCODER_RIGHT) {
 		if (c->mode == LEVEL) {
 			lightIncreaseLevel((BaseLight *)c->light);
