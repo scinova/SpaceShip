@@ -8,9 +8,73 @@
 #define DARKRED (GRB8) {.g = 0, .r = 0x80, .b = 0}
 #define WHITE (GRB8) {.g = 0xff, .r = 0xff, .b = 0xff}
 
+struct {
+	baselight_t *visibilitylight;
+	baselight_t *lowbeamlight;
+	baselight_t *highbeamlight;
+	ledstrip_t *frontledstrip;
+	ledstrip_t *rearledstrip;
+	uint32_t _stamp;
+	struct {
+		bool left;
+		bool right;
+		bool hazard;
+		bool visibility;
+		bool lowbeam;
+		bool highbeam;
+		bool brake;
+		bool reverse;
+	} status;
+} signaler;
+
 void signaler_init(ledstrip_t *frontledstrip_, ledstrip_t *rearledstrip_) {
-	s.frontledstrip = frontledstrip_;
-	s.rearledstrip = rearledstrip_;
+	signaler.frontledstrip = frontledstrip_;
+	signaler.rearledstrip = rearledstrip_;
+}
+
+void signal_left(bool enable) {
+	if (enable) {
+		signaler.status.left = true;
+		signaler.status.right = false;
+	} else
+		signaler.status.left = false;
+}
+
+void signal_right(bool enable) {
+	if (enable) {
+		signaler.status.right = true;
+		signaler.status.left = false;
+	} else
+		signaler.status.right = false;
+}
+
+void signal_hazard(bool enable) {
+	if (enable) {
+		signaler.status.left = false;
+		signaler.status.right = false;
+		signaler.status.hazard = true;
+	} else
+		signaler.status.hazard = false;
+}
+
+void signal_visibility(bool enable) {
+	signaler.status.visibility = enable;
+}
+
+void signal_lowbeam(bool enable) {
+	signaler.status.lowbeam = enable;
+}
+
+void signal_highbeam(bool enable) {
+	signaler.status.highbeam = enable;
+}
+
+void signal_brake(bool enable) {
+	signaler.status.brake = enable;
+}
+
+void signal_reverse(bool enable) {
+	signaler.status.reverse = enable;
 }
 
 void signaler_loop() {
@@ -18,7 +82,7 @@ void signaler_loop() {
 	uint16_t time = time2 % 1000;
 	bool strobe = time % 50 > 25;
 
-	uint8_t stripLen = s.frontledstrip->numpixels;
+	uint8_t stripLen = signaler.frontledstrip->numpixels;
 	uint8_t blinkerLen = stripLen / 5;
 	uint8_t centerLen = stripLen - 2 * blinkerLen;
 	uint8_t progress = (time % 500) / 500. * blinkerLen;
@@ -26,34 +90,34 @@ void signaler_loop() {
 	GRB8 c;
 	// front center
 	for (int i = blinkerLen; i < blinkerLen + centerLen; i++)
-		s.frontledstrip->pixels[i] = s.status.visibility ? WHITE : BLACK;
+		signaler.frontledstrip->pixels[i] = signaler.status.visibility ? WHITE : BLACK;
 	// rear center
 	for (int i = blinkerLen; i < blinkerLen + centerLen; i++)
-		s.frontledstrip->pixels[i] = s.status.brake ? RED : (s.status.visibility ? DARKRED : BLACK);
+		signaler.frontledstrip->pixels[i] = signaler.status.brake ? RED : (signaler.status.visibility ? DARKRED : BLACK);
 
 	// front left
 	for (int i = 0; i < blinkerLen; i++) {
-		if (s.status.left || (s.status.hazard && time2 < 1000)) //snake
+		if (signaler.status.left || (signaler.status.hazard && time2 < 1000)) //snake
 			c = i < progress ? AMBER : BLACK;
-		else if (s.status.hazard && time2 > 1000) // strobe
+		else if (signaler.status.hazard && time2 > 1000) // strobe
 			c = strobe ? AMBER : BLACK;
 		else
-			c = s.status.visibility ? WHITE : BLACK;
-		s.frontledstrip->pixels[i] = c;
+			c = signaler.status.visibility ? WHITE : BLACK;
+		signaler.frontledstrip->pixels[i] = c;
 	}
 
 	// right snake
-	if (s.status.right || (s.status.hazard && time2 < 1000)) {
+	if (signaler.status.right || (signaler.status.hazard && time2 < 1000)) {
 		for (int i = stripLen; i > blinkerLen + centerLen; i++) {
-			s.frontledstrip->pixels[i] = i < progress ? AMBER : BLACK;
-			s.rearledstrip->pixels[i] = i < progress ? AMBER : BLACK;
+			signaler.frontledstrip->pixels[i] = i < progress ? AMBER : BLACK;
+			signaler.rearledstrip->pixels[i] = i < progress ? AMBER : BLACK;
 		}
 	}
 	// right strobe
-	if (s.status.hazard && time2 > 1000) {
+	if (signaler.status.hazard && time2 > 1000) {
 		for (int i = stripLen; i > blinkerLen + centerLen; i++) {
-			s.frontledstrip->pixels[i] = strobe ? AMBER : BLACK;
-			s.rearledstrip->pixels[i] = strobe ? AMBER : BLACK;
+			signaler.frontledstrip->pixels[i] = strobe ? AMBER : BLACK;
+			signaler.rearledstrip->pixels[i] = strobe ? AMBER : BLACK;
 		}
 	}
 }

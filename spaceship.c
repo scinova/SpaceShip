@@ -32,8 +32,6 @@ LedStrip stamStrip;
 
 //sensors_t sensors;
 
-signal_control_t signaler;
-
 void setup() {
 	//sensors_init();
 
@@ -70,7 +68,14 @@ void loop() {
 	switch_debounce(&horn_switch, PORTF&64);
 	switch_debounce(&brake_switch, PORTF&128);
 	switch_debounce(&reverse_switch, PORTK&128);
-
+	signal_left(left_turn_switch.state);
+	signal_right(right_turn_switch.state);
+	signal_hazard(hazard_switch.state);
+	signal_visibility(visibility_light_switch.state);
+	signal_lowbeam(lowbeam_light_switch.state);
+	signal_highbeam(highbeam_light_switch.state);
+	signal_brake(hazard_switch.state);
+	signal_reverse(reverse_switch.state);
 	signaler_loop();
 
 	lightLoop((baselight_t *)&roomlight);
