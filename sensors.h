@@ -3,45 +3,35 @@
 
 #include <time.h>
 
-typedef struct {
-	union {
-		double v[3];
-		struct {
-			double x;
-			double y;
-			double z;
-		};
-	};
-} Vector;
-
-typedef struct {
-	union {
-		double v[2];
-		struct {
-			double latitude;
-			double longitude;
-		};
-	};
-} location_t;
-
-typedef struct {
-	time_t time;
-	location_t location;
-	double altitude;
-	double pitch;
-	double roll;
-	double direction;
-	double speed;
-	double temperature;
-	double humidity;
-	double pressure;
-} sensors_t;
-
-sensors_t sensors;
+struct {
+	struct tm time;
+	struct {
+		double latitude;
+		double longitude;
+	} location;
+	struct {
+		double pitch;
+		double roll;
+		double direction;
+		double speed;
+	} orientation;
+	struct {
+		double temperature;
+		double humidity;
+		double pressure;
+	} weather;
+} sensors;
 
 void sensors_init();
-void sensors_read();
-
-
+void read_weather_sensors();
+void enable_position_sensors();
+void disable_position_sensors();
+void enable_motion_detect();
+void disable_motion_detect();
+void read_position_sensors();
+void enable_gps_sensor();
+void disable_gps_sensor();
+void read_gps_sensor();
+void sensors_loop();
 
 #endif
