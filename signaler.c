@@ -1,6 +1,7 @@
 #include "system.h"
 #include "signaler.h"
 #include "light.h"
+#include "button.h"
 
 #define AMBER (GRB8) {.g = 0xc0, .r = 0xff, .b = 0}
 #define BLACK (GRB8) {.g = 0, .r = 0, .b = 0}
@@ -32,29 +33,69 @@ void signaler_init(ledstrip_t *frontledstrip_, ledstrip_t *rearledstrip_) {
 	signaler.rearledstrip = rearledstrip_;
 }
 
-void signal_left(bool enable) {
-	if (enable) {
+void signal_left(uint8_t event) {
+	if (signaler.status.hazard)
+		return;
+#ifdef TURN_BUTTONS
+	if (event == BUTTON_PRESSED) {
+		if (!signaler.status.left) {
+			signaler.status.left = true;
+			signaler.status.right = false;
+		} else
+			signaler.status.left = false;
+	}
+#else
+	if (event == SWITCH_CLOSED) && !signaler.status.left) {
 		signaler.status.left = true;
 		signaler.status.right = false;
-	} else
+	}
+	if (event == SWITCH_RELEASED)
 		signaler.status.left = false;
+#endif
 }
 
-void signal_right(bool enable) {
-	if (enable) {
+void signal_right(uint8_t event) {
+	if (signaler.status.hazard)
+		return;
+#ifdef TURN_BUTTONS
+	if (event == BUTTON_PRESSED) {
+		if (!signaler.status.right) {
+			signaler.status.right = true;
+			signaler.status.left = false;
+		} else
+			signaler.status.right = false;
+	}
+#else
+	if (event == SWITCH_CLOSED) && !signaler.status.right) {
 		signaler.status.right = true;
 		signaler.status.left = false;
-	} else
+	}
+	if (event == SWITCH_RELEASED)
 		signaler.status.right = false;
+#endif
 }
 
-void signal_hazard(bool enable) {
-	if (enable) {
+void signal_hazard(uint8_t event) {
+#ifdef HAZARD_BUTTON
+	if (event == BUTTON_PRESSED) {
+		if (!signaler.status.hazard) {
+			signaler.status.hazard = true;
+#ifdef TURN_BUTTONS
+			signaler.status.right = false;
+			signaler.status.left = false;
+#endif
+		} else
+			signaler.status.hazard = false;
+	}
+#else
+	if (event == SWITCH_CLOSED) && !signaler.status.hazard) {
+		signaler.status.hazard = true;
 		signaler.status.left = false;
 		signaler.status.right = false;
-		signaler.status.hazard = true;
-	} else
-		signaler.status.hazard = false;
+	}
+	if (event == SWITCH_RELEASED)
+		signaler.status.right = false;
+#endif
 }
 
 void signal_visibility(bool enable) {

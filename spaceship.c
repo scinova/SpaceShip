@@ -12,9 +12,9 @@ Button button2;
 Encoder encoder1;
 Encoder encoder2;
 
-Switch left_turn_switch;
-Switch right_turn_switch;
-Switch hazard_switch;
+Button left_turn_button;
+Button right_turn_button;
+Button hazard_button;
 Switch visibility_light_switch;
 Switch lowbeam_light_switch;
 Switch highbeam_light_switch;
@@ -59,22 +59,22 @@ void loop() {
 		roomlight_control_handle(event);
 
 	// read switches
-	switch_debounce(&left_turn_switch, PORTF&1);
-	switch_debounce(&right_turn_switch, PORTF&2);
-	switch_debounce(&hazard_switch, PORTF&4);
+	event = button_debounce(&left_turn_button, PORTF&1);
+	signal_left(event);
+	event = button_debounce(&right_turn_button, PORTF&2);
+	signal_right(event);
+	event = button_debounce(&hazard_button, PORTF&4);
+	signal_hazard(event);
 	switch_debounce(&visibility_light_switch, PORTF&8);
 	switch_debounce(&lowbeam_light_switch, PORTK&16);
 	switch_debounce(&highbeam_light_switch, PORTF&32);
 	switch_debounce(&horn_switch, PORTF&64);
 	switch_debounce(&brake_switch, PORTF&128);
 	switch_debounce(&reverse_switch, PORTK&128);
-	signal_left(left_turn_switch.state);
-	signal_right(right_turn_switch.state);
-	signal_hazard(hazard_switch.state);
 	signal_visibility(visibility_light_switch.state);
 	signal_lowbeam(lowbeam_light_switch.state);
 	signal_highbeam(highbeam_light_switch.state);
-	signal_brake(hazard_switch.state);
+	signal_brake(brake_switch.state);
 	signal_reverse(reverse_switch.state);
 	signaler_loop();
 
